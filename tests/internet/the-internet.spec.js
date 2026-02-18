@@ -28,6 +28,7 @@ test('Login Success', async ({ page }) => {
 
   await expect(login.successMsg)
     .toContainText('You logged into a secure area!');
+    // .toContainText('afsh');
 });
 
 test('checkbox Success', async ({ page }) => {
@@ -140,3 +141,74 @@ test('Drag and Drop Test', async ({ page }) => {
 
   expect(await dragPage.getColumnAText()).toContain('B');
 });
+
+test('Count Playwright word in sidebar menu', async ({ page }) => {
+
+  await page.goto('https://playwright.dev/docs/installation');
+
+  // Locate sidebar menu
+  const sidebar = page.locator('nav[aria-label="Docs sidebar"]');
+
+  // Get full text content of sidebar
+  const sidebarText = await sidebar.innerText();
+
+  // Count occurrences of word "Playwright"
+  const matches = sidebarText.match(/Playwright/g);
+
+  const count = matches ? matches.length : 0;
+
+  console.log('Playwright appears:', count, 'times');
+
+});
+
+ test('Valid Login', async ({ page }) => {
+ // const BASE_URL = 'https://katalon-demo-cura.herokuapp.com';
+ await page.goto('https://katalon-demo-cura.herokuapp.com');
+   
+ 
+//await page.pause();
+//#btn-make-appointment
+     await page.click('#btn-make-appointment');
+    //await expect(page.locator('h2')).toHaveText('Make Appointment');
+    await page.fill('input[name="username"]', 'John Doe');
+    await page.fill('input[name="password"]', 'ThisIsNotAPassword');
+    await page.click('button[type="submit"]');
+
+
+
+    await page.selectOption('select#combo_facility', {
+      label: 'Tokyo CURA Healthcare Center'
+    });
+
+    // Readmission checkbox
+    await page.check('input#chk_hospotal_readmission');
+
+    // Healthcare program radio button
+    await page.check('input[value="Medicare"]');
+//await page.pause();
+   await page.click('#txt_visit_date');
+await page.fill('#txt_visit_date', '11/02/2026');
+await page.keyboard.press('Enter');
+//await page.keyboard.press('Tab');
+
+
+    // Comment
+    await page.click('textarea#txt_comment');
+    await page.fill('textarea#txt_comment', 'This is sample test');
+
+    // Book Appointment button
+    await page.click('button[type="submit"]');
+
+    // Verify confirmation
+    await expect(page.locator('h2'))
+      .toHaveText('Appointment Confirmation');
+
+    await expect(page.locator('#facility'))
+      .toContainText('Tokyo CURA Healthcare Center');
+       await page.click('a#menu-toggle');
+
+    // Click Logout using text-based locator
+    await page.click('a:has-text("Logout")');
+
+    await expect(page).toHaveURL('https://katalon-demo-cura.herokuapp.com/');
+  });

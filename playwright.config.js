@@ -16,7 +16,8 @@ export default defineConfig({
   testDir: './tests',
 
   fullyParallel: true,  // 🔥 allow tests in same file to run parallel
-  workers: 4,           
+  workers: 4,   
+  retries:2,        
    reporter: [
     ['list'],
     ['allure-playwright']
@@ -26,6 +27,7 @@ export default defineConfig({
 
   use: {
     baseURL: ENV_CONFIG[ENV].baseURL,
+    screenshot: 'only-on-failure',
     headless: false,
     launchOptions: {
       slowMo: 1000,
